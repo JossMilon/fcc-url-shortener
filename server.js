@@ -31,23 +31,25 @@ app.get("/api/hello", function (req, res) {
 //Post shorturl
 app.post("/api/shorturl", async (req, res) => {
   try {
-    const isUrlAlreadyThere = await Shorturl.findOne({
+    // console.log(req.fields);
+    // console.log(req.body);
+    // const isUrlAlreadyThere = await Shorturl.findOne({
+    //   original_url: req.fields.url,
+    // });
+    // if (isUrlAlreadyThere) {
+    //   res.status(400).json({ message: "URL already shortened" });
+    // } else {
+    const newShorturl = new Shorturl({
       original_url: req.fields.url,
+      short_url: i,
     });
-    if (isUrlAlreadyThere) {
-      res.status(400).json({ message: "URL already shortened" });
-    } else {
-      const newShorturl = new Shorturl({
-        original_url: req.fields.url,
-        short_url: i,
-      });
-      i++;
-      await newShorturl.save();
-      res.status(200).json({
-        original_url: newShorturl.original_url,
-        short_url: newShorturl.short_url,
-      });
-    }
+    i++;
+    await newShorturl.save();
+    res.status(200).json({
+      original_url: newShorturl.original_url,
+      short_url: newShorturl.short_url,
+    });
+    // }
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
