@@ -10,11 +10,23 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "dotenv": "^8.6.0",
+    "express": "^4.17.1",
+    "express-formidable": "^1.2.0",
+    "mongoose": "^6.1.1"
   },
   "license": "MIT",
   "devDependencies": {
     "nodemon": "^2.0.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JossMilon/url-shortener.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/JossMilon/url-shortener/issues"
+  },
+  "homepage": "https://github.com/JossMilon/url-shortener#readme"
 }
