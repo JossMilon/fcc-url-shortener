@@ -24,32 +24,41 @@ app.get("/", function (req, res) {
 });
 
 // Your first API endpoint
-app.get("/api/hello", function (req, res) {
-  res.json({ greeting: "hello API" });
+app.get("/api/shorturl/:short_url", async function (req, res) {
+  try {
+    const shortUrlRequested = await Shorturl.findOne({
+      short_url: req.params.short_url,
+    });
+    if (shortUrlRequested) {
+      res.redirect(shortUrlRequested.original_url);
+    } else {
+      res.status(400).json({ message: "Short URL doesn't exist" });
+    }
+  } catch {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 //Post shorturl
 app.post("/api/shorturl", async (req, res) => {
   try {
-    // console.log(req.fields);
-    // console.log(req.body);
-    // const isUrlAlreadyThere = await Shorturl.findOne({
-    //   original_url: req.fields.url,
-    // });
-    // if (isUrlAlreadyThere) {
-    //   res.status(400).json({ message: "URL already shortened" });
-    // } else {
-    const newShorturl = new Shorturl({
+    const isUrlAlreadyThere = await Shorturl.findOne({
       original_url: req.fields.url,
-      short_url: i,
     });
-    i++;
-    await newShorturl.save();
-    res.status(200).json({
-      original_url: newShorturl.original_url,
-      short_url: newShorturl.short_url,
-    });
-    // }
+    if (isUrlAlreadyThere) {
+      res.status(400).json({ message: "URL already shortened" });
+    } else {
+      const newShorturl = new Shorturl({
+        original_url: req.fields.url,
+        short_url: i,
+      });
+      i++;
+      await newShorturl.save();
+      res.status(200).json({
+        original_url: newShorturl.original_url,
+        short_url: newShorturl.short_url,
+      });
+    }
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
