@@ -13,7 +13,8 @@ app.use(formidable());
 app.use("/public", express.static(`${process.cwd()}/public`));
 
 // Regexp
-const validUrlRegexp = /^((ftp|http|https):\/\/)?www\.([A-z]+)\.([A-z]{2,})/;
+const validUrlRegexp =
+  /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
 // Importing shorturl model
 const Shorturl = require("./models/Shorturl");
