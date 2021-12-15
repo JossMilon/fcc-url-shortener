@@ -12,11 +12,12 @@ app.use(cors());
 app.use(formidable());
 app.use("/public", express.static(`${process.cwd()}/public`));
 
+// Regexp
+const validUrlRegexp = /^((ftp|http|https):\/\/)?www\.([A-z]+)\.([A-z]{2,})/;
+
 // Importing shorturl model
 const Shorturl = require("./models/Shorturl");
-
-//Not very safe shorturl counter
-let i = 0;
+const { count } = require("./models/Shorturl");
 
 //Main route
 app.get("/", function (req, res) {
@@ -46,13 +47,16 @@ app.post("/api/shorturl", async (req, res) => {
       original_url: req.fields.url,
     });
     if (isUrlAlreadyThere) {
-      res.status(400).json({ message: "URL already shortened" });
+      res.status(400).json({ error: "url already shortened" });
+    } else if (!validUrlRegexp.test(req.fields.url)) {
+      res.status(400).json({ error: "invalid url" });
     } else {
+      const orderedUrls = await Shorturl.find().sort({ short_url: "desc" });
+      const counter = orderedUrls.length !== 0 ? orderedUrls[0].short_url : 0;
       const newShorturl = new Shorturl({
         original_url: req.fields.url,
-        short_url: i,
+        short_url: counter + 1,
       });
-      i++;
       await newShorturl.save();
       res.status(200).json({
         original_url: newShorturl.original_url,
