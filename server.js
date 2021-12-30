@@ -48,9 +48,9 @@ app.post("/api/shorturl", async (req, res) => {
       original_url: req.fields.url,
     });
     if (isUrlAlreadyThere) {
-      res.status(400).json({ error: "url already shortened" });
+      res.status(200).json({ error: "url already shortened" });
     } else if (!validUrlRegexp.test(req.fields.url)) {
-      res.status(400).json({ error: "invalid url" });
+      res.status(200).json({ error: "invalid url" });
     } else {
       const orderedUrls = await Shorturl.find().sort({ short_url: "desc" });
       const counter = orderedUrls.length !== 0 ? orderedUrls[0].short_url : 0;
